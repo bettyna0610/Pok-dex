@@ -58,11 +58,15 @@ export class PokemonContainer extends React.Component<MyProps,MyState> {
     render() {
       let pokemonArray = this.state.pokemonAll
         return (
-            <div>
-            <button onClick={this.handleClick}>Click</button>
-            <div>
-            {pokemonArray.map(pokemon => <Pokemon key={pokemon.name} url={pokemon.url} name={pokemon.name} /> )}
+            <div className="container">
+           <div className="row">
+           <div className="col-xs-3">
+            {pokemonArray.map(pokemon => <Pokemon  key={pokemon.name} url={pokemon.url} name={pokemon.name} /> )}
             </div>
+           </div>
+          
+           
+            
            
             </div>
         )
