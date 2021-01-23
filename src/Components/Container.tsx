@@ -7,7 +7,8 @@ type MyProps = {
 };
 
 type MyState = {
-    pokemonAll: Data[]; // like this
+    pokemonAll: Data[];
+   
   };
 
   type Data = {
@@ -18,7 +19,8 @@ type MyState = {
 export class PokemonContainer extends React.Component<MyProps,MyState> {
     state: MyState = {
         // optional second annotation for better type inference
-        pokemonAll: []
+        pokemonAll: [],
+        
       };
     /*
     componentDidMount() {
@@ -37,7 +39,7 @@ export class PokemonContainer extends React.Component<MyProps,MyState> {
     }*/
 
     componentDidMount () {
-      fetch('https://pokeapi.co/api/v2/pokemon/?limit=60').then(response => response.json())
+      fetch('https://pokeapi.co/api/v2/pokemon/?limit=100').then(response => response.json())
       .then(data => {
           console.log(data.results[0])
           let newData = data.results
@@ -46,6 +48,9 @@ export class PokemonContainer extends React.Component<MyProps,MyState> {
        // pokemonAll: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg"
        pokemonAll: newData
       })
+
+    
+
     })
   }
     
