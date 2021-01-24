@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import {PokemonContainer} from './Components/Container'
 import {NavBarEl} from './Components/Navbar'
