@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react';
-import {Pokemon} from './Pokemon'
+import {PokemonCard} from './PokemonCard'
 import axios from 'axios'
 import {Pagination} from './Pagination'
 
@@ -31,9 +31,9 @@ export const PokemonContainer = () => {
   useEffect (() => {
    const fetchPokemon = async () => {
      setLoading(true);
-     const res = await axios.get('https://pokeapi.co/api/v2/pokemon/?limit=1118')
+     const res = await axios.get('https://pokeapi.co/api/v2/pokemon/?limit=200')
      setAllPokemon(res.data.results)
-     setTotalPok(res.data.count)
+     setTotalPok(100)
      setLoading(false)
    }
 
@@ -94,7 +94,7 @@ export const PokemonContainer = () => {
              <Pagination pokemonPerPage={pokemonPerPage} totalPokemons={totalPok} paginate={paginate}/>
              </div>
           <div className="row">
-          {loading ? "Loading..." : currentPokemons.map((pokemon:any) => <Pokemon  key={pokemon.name} url={pokemon.url} name={pokemon.name} /> )}
+          {loading ? "Loading..." : currentPokemons.map((pokemon:any) => <PokemonCard  key={pokemon.name} url={pokemon.url} name={pokemon.name} /> )}
           </div>
            <div className="col-xs-3">
            

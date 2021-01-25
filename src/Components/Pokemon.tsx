@@ -1,33 +1,149 @@
-import React, { useState } from 'react'
+import React from 'react'
 
-export const Pokemon: React.FC<{name:string,url:string}> = (props) => {
+type MyProps = {
+    match:any
+}
 
-    const [type, setType] = useState("")
-     let indexURL = props.url.split('/')[props.url.split('/').length-2]
-     //let pokemonURL = `https://pokeapi.co/api/v2/pokemon/${indexURL}`
-     let imageSource = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${indexURL}.svg`
-     
-     
+type MyState = {
+ 
+}
 
-     fetch(props.url).then(response => response.json())
-        .then(data => {
-            console.log(data.types[0].type.name)
-            //pokemonType = data.types[0].type.name
-            setType(data.types[0].type.name)
-            })
-     
-     
-    return  (
-        <div className="card" style={{display:'inline-block', margin:10}}>
+export class Pokemon extends React.Component<MyProps, MyState> {
+
+    state = {
+        image:'',
+        name:'',
+        abilities: [],
+        type:[],
+        orderNumber:0,
+        stats: {
+            hp:'',
+            attack:'',
+            defense:'',
+            specialAttack:'',
+            specialDefense:'',
+            speed:''
+        },
+        evolution: {
+            evo1 : '',
+            evo2 :'',
+            evo3 :''
+        },
+        moves: []
+
+    }
+
+    componentDidMount() {
+        let {pokemonIndex}  = this.props.match.params
+        fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonIndex}`).then(response => response.json())
+        .then(data => { 
+            let imageSource;
+            if(parseInt(pokemonIndex) >= 650) {
+             imageSource = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonIndex}.png`
+            } else {
+                imageSource =  `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${pokemonIndex}.svg`
+            }
             
-            <div className="card-header">{indexURL} {props.name.toLowerCase().split(" ").map(character => character.charAt(0).toUpperCase() + character.substring(1))}
-            {type}
+                let abilities = data.abilities.map((ability:any) => ability.ability.name)
+                let name = data.name
+                let type = data.types.map((pokType:any) => pokType.type.name)
+                let orderNumber = data.order
+                let hp; let attack; let defense; let specialAttack; let specialDefense; let speed;
+                let moves = data.moves.map((move:any) => <li>{move.move.name}</li>)
+
+                data.stats.map(
+                   (stat:any)  => {
+                       switch(stat.stat.name) {
+                           case 'hp':
+                               hp = stat['base_stat']
+                               break;
+                         case 'attack':
+                             attack = stat['base_stat']
+                             break;
+                             case 'defense':
+                                 defense = stat['base_stat']
+                                 break;
+                                 case 'special-attack':
+                                     specialAttack = stat['base_stat']
+                                     break;
+                                     case 'special-defense':
+                                         specialDefense = stat['base_stat']
+                                         break;
+                                         case 'speed':
+                                             speed = stat['base_stat']
+                                     break;
+                       } 
+
+
+                    
+                })
+                fetch(data.species.url).then(response => response.json())
+               .then(dataEvolution => { fetch(dataEvolution.evolution_chain.url).then(response => response.json()).then(dataEvoChain => {
+                   let evo1; let evo2; let evo3
+                   
+                    evo1 = dataEvoChain.chain.species.name;
+
+                   if (dataEvoChain.chain.evolves_to[0].species.name) {
+                    evo2 = dataEvoChain.chain.evolves_to[0].species.name;
+                   } else {
+                       evo2 = null
+                   }
+                   
+                   
+                   if(dataEvoChain.chain.evolves_to.length >= 1) {
+                    evo3 = dataEvoChain.chain.evolves_to[0].evolves_to[0].species.name
+                   } else {
+                       
+                   }
+                  
+
+                   this.setState({
+                       evolution: {
+                           evo1,
+                           evo2,
+                           evo3
+                       }
+                   })
+               })})
+
+               this.setState({
+                    image: imageSource,
+                    abilities,
+                    name,
+                    type,
+                    orderNumber,
+                    stats: {
+                        hp,
+                        attack,
+                        defense,
+                        specialAttack,
+                        specialDefense,
+                        speed
+                    },
+                    moves
+
+               })
+
+               
+            })
+    }
+
+
+render() {
+    let {image,name,abilities,type,orderNumber,stats,moves,evolution} = this.state
+    return (
+        <div><img src={image}/>
+       <div>
+       {name}
            </div>
-           
-           <img width="150px" height="150px" src={imageSource} />
-           
-        
-        </div>
-        
-    ) 
+         {abilities}
+         <div>{type}</div>
+         <div>{orderNumber}</div>
+         {stats.hp}<div>{stats.attack}</div><div>{stats.defense}
+         </div><div>{stats.specialAttack}</div><div>{stats.specialDefense}</div><div>{stats.speed}</div>
+         Moves:<ul>{moves}</ul>
+          <div>{evolution.evo1}</div><div>{evolution.evo2 && evolution.evo2}</div><div>{evolution.evo3 && evolution.evo3}</div>
+         </div>
+    )
+}
 }
