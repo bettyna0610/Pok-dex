@@ -31,9 +31,9 @@ export const PokemonContainer = () => {
   useEffect (() => {
    const fetchPokemon = async () => {
      setLoading(true);
-     const res = await axios.get('https://pokeapi.co/api/v2/pokemon/?limit=200')
+     const res = await axios.get('https://pokeapi.co/api/v2/pokemon/?limit=1118')
      setAllPokemon(res.data.results)
-     setTotalPok(100)
+     setTotalPok(res.data.count)
      setLoading(false)
    }
 

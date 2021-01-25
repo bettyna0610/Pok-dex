@@ -9,7 +9,7 @@ type MyState = {
 }
 
 export class Pokemon extends React.Component<MyProps, MyState> {
-
+   
     state = {
         image:'',
         name:'',
@@ -77,34 +77,41 @@ export class Pokemon extends React.Component<MyProps, MyState> {
 
                     
                 })
+                
                 fetch(data.species.url).then(response => response.json())
                .then(dataEvolution => { fetch(dataEvolution.evolution_chain.url).then(response => response.json()).then(dataEvoChain => {
                    let evo1; let evo2; let evo3
                    
                     evo1 = dataEvoChain.chain.species.name;
 
-                   if (dataEvoChain.chain.evolves_to[0].species.name) {
+                    console.log(dataEvoChain.chain.species.name)
+                   console.log(dataEvoChain.chain.evolves_to)
+                  //  console.log(dataEvoChain.chain.evolves_to[0].evolves_to[0].species.name)
+
+                  // if (dataEvoChain.chain.evolves_to[0].species.name) {
+                    if(dataEvoChain.chain.evolves_to.length > 0  || dataEvoChain.chain.evolves_to[0].species.name.length > 0) {
                     evo2 = dataEvoChain.chain.evolves_to[0].species.name;
+                    
                    } else {
                        evo2 = null
                    }
                    
                    
-                   if(dataEvoChain.chain.evolves_to.length >= 1) {
+                   if(dataEvoChain.chain.evolves_to[0].evolves_to.length > 0) {
                     evo3 = dataEvoChain.chain.evolves_to[0].evolves_to[0].species.name
                    } else {
-                       
+                       evo3 = null
                    }
                   
-
                    this.setState({
-                       evolution: {
-                           evo1,
-                           evo2,
-                           evo3
-                       }
-                   })
-               })})
+                    evolution: {
+                        evo1,
+                        evo2,
+                        evo3
+                    }
+                })})})
+
+                   
 
                this.setState({
                     image: imageSource,
@@ -126,10 +133,16 @@ export class Pokemon extends React.Component<MyProps, MyState> {
 
                
             })
+           
+               
+
+            
+        
     }
 
 
 render() {
+    
     let {image,name,abilities,type,orderNumber,stats,moves,evolution} = this.state
     return (
         <div><img src={image}/>
@@ -145,5 +158,6 @@ render() {
           <div>{evolution.evo1}</div><div>{evolution.evo2 && evolution.evo2}</div><div>{evolution.evo3 && evolution.evo3}</div>
          </div>
     )
+   
 }
 }
