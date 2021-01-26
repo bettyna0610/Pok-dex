@@ -1,3 +1,4 @@
+import { Stats } from 'fs'
 import React from 'react'
 import {Evolution} from './Evolution'
 
@@ -9,6 +10,10 @@ type MyState = {
  
 }
 
+
+
+
+
 export class Pokemon extends React.Component<MyProps, MyState> {
    
     state = {
@@ -17,13 +22,15 @@ export class Pokemon extends React.Component<MyProps, MyState> {
         abilities: [],
         type:[],
         orderNumber:0,
+        statTitleWidth: 3,
+        statBarWidth: 9,
         stats: {
-            hp:'',
-            attack:'',
-            defense:'',
-            specialAttack:'',
-            specialDefense:'',
-            speed:''
+            hp:0,
+            attack:0,
+            defense:0,
+            specialAttack:0,
+            specialDefense:0,
+            speed:0
         },
         evolution: []
         
@@ -140,28 +147,66 @@ export class Pokemon extends React.Component<MyProps, MyState> {
 
 render() {
     
-    let imgSource:string;
-    let {image,name,abilities,type,orderNumber,stats,moves,evolution} = this.state
-    fetch(`https://pokeapi.co/api/v2/pokemon/${name}`).then(response => response.json())
-    .then(data => {
-        imgSource = data.sprites.front_default
-        console.log(imgSource)
-    })
     
+    let {image,name,abilities,type,orderNumber,stats,moves,evolution} = this.state
+     
     return (
-        <div><img src={image}/>
-       <div>
-       {name}
-           </div>
-         {abilities}
-         <div>{type}</div>
-         <div>{orderNumber}</div>
-         {stats.hp}<div>{stats.attack}</div><div>{stats.defense}
-         </div><div>{stats.specialAttack}</div><div>{stats.specialDefense}</div><div>{stats.speed}</div>
-         Moves:<ul>{moves}</ul>
-          {/*<div>{evolution.evo1}</div><div>{evolution.evo2 && evolution.evo2}</div><div>{evolution.evo3 && evolution.evo3}</div>*/}
-         {evolution.map( ( evo:string) => <Evolution name={evo} source={imgSource}/>)}
-         </div>
+        <div className="col justify-content-center">
+            <div className="card">
+            <div className="card-header">{orderNumber}.<h2>{name.toLowerCase().split(" ").map(character => character.charAt(0).toUpperCase() + character.substring(1))}</h2></div>
+              
+               <div className="row mt-3">
+               <div className="col-5 align-items-center">
+               <img width="250px" height="250px" className="img-responsive" src={image}/>
+    </div>
+<div className="col-7 align-items-center">
+<div className="row">
+    Abilities:
+{abilities.map((ability:string) => <div className="badge-pill badge-danger m-2">{ability}</div>)}
+</div>
+
+  
+ 
+  <div className="row"> Types: {type.map((ability:string) => <div className="badge-pill badge-danger m-2">{ability}</div>)}</div>
+  <div> Stats:</div>
+  HP:
+  <div className="progress m-3">
+     
+  <div className="progress-bar bg-danger" role="progressbar" style={{width: `${stats.hp}%`}}aria-valuenow={stats.hp} aria-valuemin={0} aria-valuemax={100}>{stats.hp}</div>
+</div>
+ATTACK:
+<div className="progress m-3">
+    
+  <div className="progress-bar bg-danger" role="progressbar" style={{width: `${stats.attack}%`}} aria-valuenow={stats.attack} aria-valuemin={0} aria-valuemax={100}>{stats.attack}</div>
+</div>
+DEFENSE:
+<div className="progress m-3">
+   
+  <div className="progress-bar bg-danger" role="progressbar" style={{width: `${stats.defense}%`}} aria-valuenow={stats.defense} aria-valuemin={0} aria-valuemax={100}>{stats.defense}</div>
+</div>
+SPECIAL ATTACK:
+<div className="progress m-3">
+  <div className="progress-bar bg-danger" role="progressbar" style={{width:`${stats.specialAttack}%`}} aria-valuenow={stats.specialAttack} aria-valuemin={0} aria-valuemax={100}>{stats.specialAttack}</div>
+</div>
+SPECIAL DEFENSE:
+<div className="progress m-3">
+  <div className="progress-bar bg-danger" role="progressbar" style={{width: `${stats.specialDefense}%`}} aria-valuenow={stats.specialDefense} aria-valuemin={0} aria-valuemax={100}>{stats.specialDefense}</div>
+</div>
+SPEED:
+<div className="progress m-3">
+  <div className="progress-bar bg-danger" role="progressbar" style={{width: `${stats.speed}%`}} aria-valuenow={stats.speed} aria-valuemin={0} aria-valuemax={100}>{stats.speed}</div>
+</div>
+  
+ 
+  Moves:<ul>{moves}</ul>
+   {/*<div>{evolution.evo1}</div><div>{evolution.evo2 && evolution.evo2}</div><div>{evolution.evo3 && evolution.evo3}</div>*/}
+  {evolution.map( ( evo:string) => <Evolution name={evo}/>)}
+  </div>
+  </div>
+               </div>
+               
+        </div>
+       
     )
    
 }
