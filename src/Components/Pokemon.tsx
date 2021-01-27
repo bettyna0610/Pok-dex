@@ -1,9 +1,11 @@
 import { Stats } from 'fs'
 import React from 'react'
 import {Evolution} from './Evolution'
+import {DropdownList} from './Dropdown'
 
 type MyProps = {
-    match:any
+    match:any,
+    location:any
 }
 
 type MyState = {
@@ -22,7 +24,7 @@ export class Pokemon extends React.Component<MyProps, MyState> {
         abilities: [],
         type:[],
         orderNumber:0,
-        statTitleWidth: 3,
+        statTitleWidth: 1,
         statBarWidth: 9,
         stats: {
             hp:0,
@@ -42,21 +44,24 @@ export class Pokemon extends React.Component<MyProps, MyState> {
 
     componentDidMount() {
         let {pokemonIndex}  = this.props.match.params
+        let image;
         fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonIndex}`).then(response => response.json())
         .then(data => { 
-            let imageSource;
-            if(parseInt(pokemonIndex) >= 650) {
-             imageSource = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonIndex}.png`
-            } else {
-                imageSource =  `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${pokemonIndex}.svg`
-            }
+          if(data.sprites.other.dream_world.front_default) {
+            image = data.sprites.other.dream_world.front_default
+        } else if (data.sprites.other["official-artwork"].front_default) {
+             image= data.sprites.other["official-artwork"].front_default
+     } else {
+         image = data.sprites.front_default
+     }
+    
             
                 let abilities = data.abilities.map((ability:any) => ability.ability.name)
                 let name = data.name
                 let type = data.types.map((pokType:any) => pokType.type.name)
                 let orderNumber = data.order
                 let hp; let attack; let defense; let specialAttack; let specialDefense; let speed;
-                let moves = data.moves.map((move:any) => <li>{move.move.name}</li>)
+                let moves = data.moves.map((move:any) => move.move.name)
 
                 data.stats.map(
                    (stat:any)  => {
@@ -118,7 +123,7 @@ export class Pokemon extends React.Component<MyProps, MyState> {
                    
 
                this.setState({
-                    image: imageSource,
+                    image,
                     abilities,
                     name,
                     type,
@@ -147,65 +152,91 @@ export class Pokemon extends React.Component<MyProps, MyState> {
 
 render() {
     
+  
     
     let {image,name,abilities,type,orderNumber,stats,moves,evolution} = this.state
-     
+    console.log(this.props.location)
+    let statMaxArray = [stats.hp,stats.attack,stats.defense,stats.specialAttack,stats.specialDefense,stats.speed]
+   let statMax =  Math.max(...statMaxArray)
+   let hpPercent = (stats.hp / statMax ) *100
+     let attackPercent = (stats.attack / statMax ) *100
+     let defensePercent = (stats.defense / statMax) *100
+     let specialAttackPercent = (stats.specialAttack / statMax )*100
+     let specialDefensePercent = (stats.specialDefense / statMax) *100
+     let speedPercent = (stats.speed / statMax)*100
     return (
         <div className="col justify-content-center">
             <div className="card">
             <div className="card-header">{orderNumber}.<h2>{name.toLowerCase().split(" ").map(character => character.charAt(0).toUpperCase() + character.substring(1))}</h2></div>
               
-               <div className="row mt-3">
+               <div className="row mt-1">
                <div className="col-5 align-items-center">
                <img width="250px" height="250px" className="img-responsive" src={image}/>
     </div>
 <div className="col-7 align-items-center">
+<div className="row"> <h5>Types:</h5></div> 
 <div className="row">
-    Abilities:
-{abilities.map((ability:string) => <div className="badge-pill badge-danger m-2">{ability}</div>)}
+{type.map((ability:string) => <div className="badge-pill badge-danger m-2">{ability}</div>)}</div>
+ <div className="row"><h5>Abilities: </h5> </div>  
+ <div className="row">
+ {abilities.map((ability:string) => <div className="badge-pill badge-danger m-2">{ability}</div>)}
+ </div>
+
+
+<div className="row mt-1">
+<DropdownList moves={moves} />
+</div>
+</div>
+</div>
+ <div >
+<div className="row justify-content-center">
+<div className="col-3"></div>
+<div className="col-6">
+<div> <h5> Stats:</h5></div>
+<p className="text-center">HP:</p>
+  <div className="progress m-1">
+     
+  <div className="progress-bar bg-danger" role="progressbar" style={{width: `${hpPercent}%`}}aria-valuenow={stats.hp} aria-valuemin={0} aria-valuemax={100}>{stats.hp}</div>
+</div>
+<p className="text-center">ATTACK:</p>
+<div className="progress m-1">
+    
+  <div className="progress-bar bg-danger" role="progressbar" style={{width: `${attackPercent}%`}} aria-valuenow={stats.attack} aria-valuemin={0} aria-valuemax={100}>{stats.attack}</div>
+</div>
+<p className="text-center">DEFENSE:</p>
+<div className="progress m-1">
+   
+  <div className="progress-bar bg-danger" role="progressbar" style={{width: `${defensePercent}%`}} aria-valuenow={stats.defense} aria-valuemin={0} aria-valuemax={100}>{stats.defense}</div>
+</div>
+<p className="text-center">SPECIAL ATTACK:</p>
+<div className="progress m-1">
+  <div className="progress-bar bg-danger" role="progressbar" style={{width:`${specialAttackPercent}%`}} aria-valuenow={stats.specialAttack} aria-valuemin={0} aria-valuemax={100}>{stats.specialAttack}</div>
+</div>
+<p className="text-center">SPECIAL DEFENSE:</p>
+<div className="progress m-1">
+  <div className="progress-bar bg-danger" role="progressbar" style={{width: `${specialDefensePercent}%`}} aria-valuenow={stats.specialDefense} aria-valuemin={0} aria-valuemax={100}>{stats.specialDefense}</div>
+</div>
+<p className="text-center">SPEED:</p>
+<div className="progress m-1">
+  <div className="progress-bar bg-danger" role="progressbar" style={{width: `${speedPercent}%`}} aria-valuenow={stats.speed} aria-valuemin={0} aria-valuemax={100}>{stats.speed}</div>
+</div>
+ 
+</div>
+<div className="col-3"></div>
+
+
 </div>
 
-  
  
-  <div className="row"> Types: {type.map((ability:string) => <div className="badge-pill badge-danger m-2">{ability}</div>)}</div>
-  <div> Stats:</div>
-  HP:
-  <div className="progress m-3">
-     
-  <div className="progress-bar bg-danger" role="progressbar" style={{width: `${stats.hp}%`}}aria-valuenow={stats.hp} aria-valuemin={0} aria-valuemax={100}>{stats.hp}</div>
-</div>
-ATTACK:
-<div className="progress m-3">
-    
-  <div className="progress-bar bg-danger" role="progressbar" style={{width: `${stats.attack}%`}} aria-valuenow={stats.attack} aria-valuemin={0} aria-valuemax={100}>{stats.attack}</div>
-</div>
-DEFENSE:
-<div className="progress m-3">
-   
-  <div className="progress-bar bg-danger" role="progressbar" style={{width: `${stats.defense}%`}} aria-valuenow={stats.defense} aria-valuemin={0} aria-valuemax={100}>{stats.defense}</div>
-</div>
-SPECIAL ATTACK:
-<div className="progress m-3">
-  <div className="progress-bar bg-danger" role="progressbar" style={{width:`${stats.specialAttack}%`}} aria-valuenow={stats.specialAttack} aria-valuemin={0} aria-valuemax={100}>{stats.specialAttack}</div>
-</div>
-SPECIAL DEFENSE:
-<div className="progress m-3">
-  <div className="progress-bar bg-danger" role="progressbar" style={{width: `${stats.specialDefense}%`}} aria-valuenow={stats.specialDefense} aria-valuemin={0} aria-valuemax={100}>{stats.specialDefense}</div>
-</div>
-SPEED:
-<div className="progress m-3">
-  <div className="progress-bar bg-danger" role="progressbar" style={{width: `${stats.speed}%`}} aria-valuenow={stats.speed} aria-valuemin={0} aria-valuemax={100}>{stats.speed}</div>
-</div>
-  
- 
-  Moves:<ul>{moves}</ul>
    {/*<div>{evolution.evo1}</div><div>{evolution.evo2 && evolution.evo2}</div><div>{evolution.evo3 && evolution.evo3}</div>*/}
   {evolution.map( ( evo:string) => <Evolution name={evo}/>)}
+ 
+
   </div>
   </div>
                </div>
                
-        </div>
+        
        
     )
    
