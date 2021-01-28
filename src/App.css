@@ -39,9 +39,8 @@
 .pagination {
   margin-top:30px;
 }
-.border-primary:hover{
- 
- 
-  
-  
+.dropdown-menu{
+  height:200px;
+  overflow-y:auto;
+  width:fit-content
 }
