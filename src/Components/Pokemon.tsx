@@ -56,10 +56,12 @@ export class Pokemon extends React.Component<MyProps, MyState> {
     }
 
     componentDidMount() {
-        let {pokemonIndex}  = this.props.match.params
+        let pokemonIndex  = this.props.match.url.split('/')[this.props.match.url.split('/').length-1]
+        console.log(pokemonIndex)
         let image :string;
         fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonIndex}`).then(response => response.json())
         .then(data => { 
+
           if(data.sprites.other.dream_world.front_default) {
             image = data.sprites.other.dream_world.front_default
         } else if (data.sprites.other["official-artwork"].front_default) {
@@ -227,9 +229,9 @@ render() {
    console.log(evolution)
     return (
         <div className="col justify-content-center">
-            <div className="card">
-            <div className="card-header">{orderNumber}.<h2>{name.toLowerCase().split(" ").map(character => character.charAt(0).toUpperCase() + character.substring(1))}</h2></div>
-              
+            <div >
+            <div >{orderNumber}.<h2>{name.toLowerCase().split(" ").map(character => character.charAt(0).toUpperCase() + character.substring(1))}</h2></div>
+              <hr></hr>
                <div className="row mt-1">
                <div className="col-4 align-items-center">
                <img width="250px" height="250px" className="img-fluid" src={image}/>
@@ -297,7 +299,7 @@ render() {
   
    <div className="row justify-content-center m-3"> <h5> Evolution:</h5> </div>
    <div className="row justify-content-center m-3">
-   { evolution.map ( (evo:{name:string, url:string}) =>  <PokemonCard name={evo.name} url={`${evo.url}/`}/>) } 
+   { evolution.map ( (evo:{name:string, url:string}) => <PokemonCard name={evo.name} url={`${evo.url}/`}/>  ) } 
    </div>
     
    </div>

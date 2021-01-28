@@ -44,6 +44,9 @@
     "@types/react-bootstrap-dropdown-menu": "^1.1.23",
     "@types/react-paginate": "^6.2.1",
     "@types/react-router-dom": "^5.1.7",
+    "axios": "^0.21.1",
+    "bootstrap": "^4.6.0",
+    "react-bootstrap": "^1.4.3",
     "react-dropdown": "^1.9.1",
     "react-paginate": "^7.0.0",
     "react-paginating": "^1.4.0"

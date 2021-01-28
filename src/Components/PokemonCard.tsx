@@ -1,4 +1,4 @@
-import { ADDRGETNETWORKPARAMS } from 'dns'
+
 import React, { useState } from 'react'
 import {Link} from 'react-router-dom'
 
@@ -13,15 +13,15 @@ export const PokemonCard: React.FC<{name:string,url:string}> = (props) => {
         fetch(`https://pokeapi.co/api/v2/pokemon/${indexURL}`).then(response => response.json())
         .then(data => {
 
-            
-                if(data.sprites.other.dream_world.front_default) {
+                if (data.sprites.other.dream_world.front_default) {
                     setImage(data.sprites.other.dream_world.front_default)
-                } else if (data.sprites.other["official-artwork"].front_default) {
+                    } 
+                    else if (data.sprites.other["official-artwork"].front_default) {
                      setImage(data.sprites.other["official-artwork"].front_default)
-             } else {
-                 setImage(data.sprites.front_default)
-             }
-            
+                       }
+                        else {
+                        setImage(data.sprites.front_default)
+                     }
           
        })
     
@@ -59,7 +59,7 @@ export const PokemonCard: React.FC<{name:string,url:string}> = (props) => {
            
            <img  width="150px" height="150px" src={imageSource} />
            <div className="card-footer">
-           <Link  target="_blank" to={`pokemon/${indexURL}`} className="btn btn-danger">Details</Link>
+           <Link  target="_blank" to={ `pokemon/${indexURL}`} className="btn btn-danger">Details</Link>
            </div>
            
         
