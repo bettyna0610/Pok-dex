@@ -1,0 +1,3 @@
+[0124/162040.645:ERROR:process_info.cc(359)] UncheckedAllocate
+[0124/182358.858:ERROR:process_info.cc(359)] UncheckedAllocate
+[0125/140734.757:ERROR:directory_reader_win.cc(43)] FindFirstFile: A rendszer nem találja a megadott elérési utat. (0x3)

@@ -2,8 +2,9 @@ import React, {useState} from 'react'
 
 export const Evolution :React.FC<{name:string}> = (props) => {
     let [imageSource, setImage] = useState<any>('')
+  
      
-    
+     
         fetch(`https://pokeapi.co/api/v2/pokemon/${props.name}`).then(response => response.json())
         .then(data => {
             if(data.sprites.other.dream_world.front_default) {
@@ -16,12 +17,16 @@ export const Evolution :React.FC<{name:string}> = (props) => {
             
         })
         
-    
+   
 
     return (
-        <div>
-            <div>{props.name}</div>
+        <div className="col-4 m-3">
+            {props.name && <div className="card">
+            <div className="card-header">{props.name}</div>
             <img src={imageSource}/>
+            </div>}
+            
+            
         </div>
     )
 }
