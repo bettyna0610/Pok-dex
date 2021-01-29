@@ -29,6 +29,7 @@ export const PokemonContainer = (props:any) => {
   const [pokemonPerPage,setPokemonPerPage] = useState<any>(20)
   const [totalPok,setTotalPok] = useState<any>(0)
   const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("")
 
   useEffect (() => {
    const fetchPokemon = async () => {
@@ -79,6 +80,10 @@ export const PokemonContainer = (props:any) => {
         })
     }*/
 
+    const handleSearchChange = (e:any) => {
+      setFilter(e.target.value)
+    }
+
       const lastPokemon = currentPage * pokemonPerPage
       const firstPokemon = lastPokemon - pokemonPerPage
       const currentPokemons = pokemonAll.slice(firstPokemon,lastPokemon)
@@ -91,16 +96,21 @@ export const PokemonContainer = (props:any) => {
       //let pokemonArray = pokemonAll
         return (
             <div className="container">
-              {/*
-               <div className="search-wrapper">
-        <p>Search: </p>
-        <input type="text" onChange={e => setSearch(e.target.value)}/>
-        <button onClick={() => props.history.push(`/pokemon/${search}`)}>Search</button>
-              </div>*/}
+        
+        
+  <div className="input-group mt-3 justify-content-center">
+  <div className="form-outline">
+    <input type="search"  className="form-control" onChange={handleSearchChange} />
+    
+  </div>
+  <button type="button" className="btn btn-danger" onClick={() => props.history.push(`/pokemon/${search}`)}>
+   Search
+  </button>
+</div>
            <div className="row justify-content-center">
              <div className="row ">
                <ReactPaginate pageCount={Math.ceil(totalPok/pokemonPerPage)} pageRangeDisplayed={2} marginPagesDisplayed={1} onPageChange={(data) => paginate(data.selected + 1)} containerClassName="pagination"
-                pageClassName="page-item" pageLinkClassName="page-link" previousClassName="page-link" nextClassName="page-link" activeClassName="active" />
+                pageClassName="page-item" pageLinkClassName="page-link" previousClassName="page-link" nextClassName="page-link" activeClassName="active page-item-color" />
             {/* <Pagination pokemonPerPage={pokemonPerPage} totalPokemons={totalPok} paginate={paginate}/>*/}
              </div>
           <div className="row justify-content-center">
@@ -108,9 +118,10 @@ export const PokemonContainer = (props:any) => {
           
            <div className="col">
             
-             {loading ? "Loading..." : currentPokemons.map((pokemon:any) => <PokemonCard  key={pokemon.name} url={pokemon.url} name={pokemon.name} /> )}
+             {loading ? "Loading..." : currentPokemons.map((pokemon:any) =>  pokemon.name.includes(filter) && < PokemonCard  key={pokemon.name} url={pokemon.url} name={pokemon.name} /> )}
 
             
+          
          
             
             </div>
