@@ -14,7 +14,6 @@ function App() {
               <Route exact path="/pokemon/:pokemonIndex" component={Pokemon} />
       <PokemonContainer  />
       </Switch>
-     
     </div>
     </Router>
     

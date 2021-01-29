@@ -2,7 +2,8 @@ import { Stats } from 'fs'
 import React from 'react'
 import {Evolution} from './Evolution'
 import {DropdownList} from './Dropdown'
-import { PokemonCard } from './PokemonCard'
+import { PokemonCard } from './PokemonCard';
+import {Link} from 'react-router-dom'
 
 type MyProps = {
     match:any,
@@ -24,7 +25,8 @@ type MyState = {
    specialDefense:number,
    speed:number
  },
- moves: string []
+ moves: string [],
+ loading: boolean
 }
 
 
@@ -51,16 +53,21 @@ export class Pokemon extends React.Component<MyProps, MyState> {
         
             
         ,
-        moves: []
+        moves: [],
+        loading:false
 
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         let pokemonIndex  = this.props.match.url.split('/')[this.props.match.url.split('/').length-1]
         console.log(pokemonIndex)
         let image :string;
-        fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonIndex}`).then(response => response.json())
-        .then(data => { 
+        this.state.loading = true
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonIndex}`)
+        const data =  await response.json();
+
+        await console.log(data)
+   
 
           if(data.sprites.other.dream_world.front_default) {
             image = data.sprites.other.dream_world.front_default
@@ -105,17 +112,21 @@ export class Pokemon extends React.Component<MyProps, MyState> {
 
                     
                 })
-                
-                fetch(data.species.url).then(response => response.json())
-               .then(dataEvolution => { fetch(dataEvolution.evolution_chain.url).then(response => response.json()).then(dataEvoChain => {
+                const dataSpecies =  await fetch(data.species.url)
+                const dataEvolutionJSON =  await dataSpecies.json();
+               
+                const dataEvolution = await fetch(dataEvolutionJSON.evolution_chain.url)
+                const dataEvoChain = await dataEvolution.json()
+                await console.log(dataEvoChain)
                    let evo1  ; let evo2; let evo3; 
                    
                     let evo1_name = dataEvoChain.chain.species.name;
                     let evo1_url;
-                    fetch(`https://pokeapi.co/api/v2/pokemon/${evo1_name}`).then(response => response.json()).
-         then( data => {
+                    const evo1DataFetch = await fetch(`https://pokeapi.co/api/v2/pokemon/${evo1_name}`)
+                    const evo1Data = await evo1DataFetch.json()
+                     console.log(evo1Data)
            
-           evo1_url = `https://pokeapi.co/api/v2/pokemon/${data.id}`
+           evo1_url = `https://pokeapi.co/api/v2/pokemon/${evo1Data.id}`
            evo1 ={name:evo1_name, url: evo1_url}
            console.log(evo1)
           evolutionArray.push(evo1)
@@ -123,7 +134,7 @@ export class Pokemon extends React.Component<MyProps, MyState> {
              evolution:evolutionArray
            })
            
-         })
+         
 
                    
                          
@@ -132,11 +143,11 @@ export class Pokemon extends React.Component<MyProps, MyState> {
                       if(dataEvoChain.chain.evolves_to[0].species.name.length > 0) {
                     let evo2_url;
                     let evo2_name = dataEvoChain.chain.evolves_to[0].species.name;
-
-                    fetch(`https://pokeapi.co/api/v2/pokemon/${evo2_name}`).then(response => response.json()).
-                    then( data => {
+                     const evo2DataFetch = await fetch(`https://pokeapi.co/api/v2/pokemon/${evo2_name}`)
+                    const evo2Data = await evo2DataFetch.json()
+                    
                       
-                      evo2_url = `https://pokeapi.co/api/v2/pokemon/${data.id}`
+                      evo2_url = `https://pokeapi.co/api/v2/pokemon/${evo2Data.id}`
                       evo2 ={name:evo2_name, url: evo2_url}
                       console.log(evo2)
                       
@@ -144,17 +155,19 @@ export class Pokemon extends React.Component<MyProps, MyState> {
                       this.setState({
                         evolution:evolutionArray
                       })
-                    })
+                    
 
                       //most tettem ide
                     if(dataEvoChain.chain.evolves_to[0].evolves_to.length > 0) {
                       
                      let evo3_name = dataEvoChain.chain.evolves_to[0].evolves_to[0].species.name
                      let evo3_url;
-                     fetch(`https://pokeapi.co/api/v2/pokemon/${evo3_name}`).then(response => response.json()).
-                     then( data => {
+                     const evo3DataFetch = await fetch(`https://pokeapi.co/api/v2/pokemon/${evo3_name}`)
+
+                    const evo3Data = await evo3DataFetch.json()
+                    
                        
-                       evo3_url = `https://pokeapi.co/api/v2/pokemon/${data.id}`
+                       evo3_url = `https://pokeapi.co/api/v2/pokemon/${evo3Data.id}`
                        evo3 ={name:evo3_name, url: evo3_url}
                        
                        evolutionArray.push(evo3)
@@ -162,7 +175,7 @@ export class Pokemon extends React.Component<MyProps, MyState> {
                         evolution:evolutionArray
                       })
                       
-                     })
+                     
 
                     } else {
                         evo3 = null
@@ -177,7 +190,7 @@ export class Pokemon extends React.Component<MyProps, MyState> {
                   
                   
 
-               })
+               
                this.setState({
                 image,
                 abilities,
@@ -193,16 +206,17 @@ export class Pokemon extends React.Component<MyProps, MyState> {
                     speed
                 },
                 moves,
+                loading:false
                 
                 
                   
-              })})
+              })
 
             
               console.log(this.state.evolution)
 
                
-            })
+            
            
                
 
@@ -228,23 +242,39 @@ render() {
 
    console.log(evolution)
     return (
+      <div className="container">
+        {this.state.loading  ? "Loading..." :
         <div className="col justify-content-center">
             <div >
-            <div >{orderNumber}.<h2>{name.toLowerCase().split(" ").map(character => character.charAt(0).toUpperCase() + character.substring(1))}</h2></div>
+              
+            <div className="row mt-3 mb-0">
+              <div className="col-4">
+              <Link to='/' className="btn btn-danger">Back to Pokédex</Link>
+              </div>
+           <div className="col-4">
+           <div className="row justify-content-center">{orderNumber}.</div>
+           <div className="row justify-content-center ">
+           <h2>{name.toLowerCase().split(" ").map(character => character.charAt(0).toUpperCase() + character.substring(1))}</h2>
+            </div> 
+           </div>
+         
+           <div className="col-4"></div>
+            
+              </div>
               <hr></hr>
                <div className="row mt-1">
                <div className="col-4 align-items-center">
-               <img width="250px" height="250px" className="img-fluid" src={image}/>
+               <img max-width="250px" max-height="250px" className="img-fluid" src={image}/>
     </div>
     <div className="col-4"><div className="row justify-content-center"> <h5>Types:</h5></div> 
 <div className="row justify-content-center">
-{type.map((ability:string) => <div className="badge-pill badge-danger m-2">{ability}</div>)}</div></div>
+{type.map((ability:string) => <div className="btn btn-danger m-2">{ability}</div>)}</div></div>
 <div className="col-4 align-items-left">
 
  <div className="row justify-content-center"><h5>Abilities: </h5> </div>  
  <div className="col">
  <div >
- {abilities.map((ability:string) => <div className="badge-pill badge-danger m-2">{ability}</div>)}
+ {abilities.map((ability:string) => <div className="btn btn-danger m-2">{ability}</div>)}
  </div>
  </div>
  
@@ -299,17 +329,17 @@ render() {
   
    <div className="row justify-content-center m-3"> <h5> Evolution:</h5> </div>
    <div className="row justify-content-center m-3">
-   { evolution.map ( (evo:{name:string, url:string}) => <PokemonCard name={evo.name} url={`${evo.url}/`}/>  ) } 
+   { evolution &&  evolution.map ( (evo:{name:string, url:string}) => <PokemonCard name={evo.name} url={`${evo.url}/`}/>  ) } 
    </div>
     
    </div>
   
    </div>
    </div>
- 
- 
+}
+   </div>
 
-  
+
   
                
         
