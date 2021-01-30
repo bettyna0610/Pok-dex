@@ -3,7 +3,7 @@ import './App.css';
 import {PokemonContainer} from './Components/Container'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
-import {Pokemon} from './Components/Pokemon'
+import {Pokemon} from './Components/PokemonPage/Pokemon'
 
 function App() {
   return (
