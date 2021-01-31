@@ -1,7 +1,7 @@
 
 import React from 'react'
 import {DropdownList} from './Dropdown'
-import { PokemonCard } from '../PokemonCard';
+import {PokemonCard } from '../PokemonCard';
 import {Link} from 'react-router-dom'
 import {Stats} from './Stats'
 
@@ -96,10 +96,7 @@ export class Pokemon extends React.Component<MyProps, MyState> {
                                   case 'speed':
                                       speed = stat['base_stat']
                               break;
-                } 
-
-
-                    
+                }                     
                 })
 
                 const dataSpecies =  await fetch(data.species.url)
@@ -150,9 +147,6 @@ export class Pokemon extends React.Component<MyProps, MyState> {
                       }   
                     }
                   
-                  
-                  
-
                
                this.setState({
                 image,
@@ -195,10 +189,10 @@ render() {
       <div className="col justify-content-center">
         <div>  
           <div className="row mt-3 mb-0">
-            <div className="col-4">
+            <div className="col-lg-4 col-sm-4 col-xs">
               <Link to='/' className="btn btn-danger">Back to Pokédex</Link>
             </div>
-            <div className="col-4 center-block">
+            <div className="col-lg-4 col-sm-4 col-xs center-block">
               <div className="row justify-content-center">{orderNumber}.</div>
               <div className="row justify-content-center ">
                <h2>{name.toLowerCase().split(" ").map(character => character.charAt(0).toUpperCase() + character.substring(1))}</h2>
@@ -216,7 +210,7 @@ render() {
             <h5>Types:</h5>
           </div> 
           <div className="row justify-content-center">
-            {type.map((ability:string) => <div className="btn btn-danger m-2">{ability}</div>)}
+            {type.map((type:string) => <div key={type} className="btn btn-danger m-2">{type}</div>)}
           </div>
         </div>
         <div className="col-lg-4 col-sm-4 align-items-left col-xs">
@@ -224,7 +218,7 @@ render() {
             <h5>Abilities:</h5> 
           </div>  
           <div className="col">
-            {abilities.map((ability:string) => <div className="btn btn-danger m-2">{ability}</div>)}
+            {abilities.map((ability:string) => <div key={ability} className="btn btn-danger m-2">{ability}</div>)}
           <div>
         </div>
        </div>
@@ -255,7 +249,7 @@ render() {
       <h5> Evolution:</h5> 
     </div>
     <div className="row justify-content-center m-3">
-      { evolution &&  evolution.map ( (evo:{name:string, url:string}) => <PokemonCard name={evo.name} url={`${evo.url}/`}/>  ) } 
+      { evolution &&  evolution.map ( (evo:{name:string, url:string}) => <PokemonCard key={evo.name} name={evo.name} url={`${evo.url}/`}/>  ) } 
     </div> 
    </div>
   </div>

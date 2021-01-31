@@ -11,7 +11,7 @@ export const DropdownList : React.FC <{moves:string[]}> = (props) => {
       title="Moves"
       variant="danger"
         >
-            {props.moves.map((move:string) =>  <Dropdown.ItemText key={move} >{move}</Dropdown.ItemText> )}
+            {props.moves.map((move:string) =>  <Dropdown.ItemText key={move}>{move}</Dropdown.ItemText> )}
                      
     </DropdownButton>
    )

@@ -18,17 +18,16 @@ test('renders the component', () => {
   expect(toJSON(component)).toMatchSnapshot();
 });
 
-test('should render all dropdown list with moves', () => {
+test('should render Pokemon page', () => {
+  const component = shallow(<Pokemon match=""/>);
+  expect(toJSON(component)).toMatchSnapshot();
+})
+
+test('should render dropdown list with moves', () => {
   const component = shallow(<DropdownList moves={["attack","defense","fly"]} />);
   expect(toJSON(component)).toMatchSnapshot();
 })
 
-test('not showing pagination when search', () => {
-  let value = "pikachu"
-  const component = shallow(<PokemonContainer />);
-  component.find('input').simulate("change", { target: {value}})
-  expect(component.find('.pagination')).toHaveLength(0)
-});
 
 test('pokemon page navigates back to homepage', () => {
   const history = createMemoryHistory()

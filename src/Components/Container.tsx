@@ -23,25 +23,24 @@ export const PokemonContainer = () => {
      setAllPokemon(res.data.results)
      setTotalPok(res.data.count)
      setLoading(false)
-   }
+  }
 
    fetchPokemon()
-  }, [])
+  }, []) 
    
+  const handleSearchChange = (e :React.ChangeEvent<HTMLInputElement>) => {
+    setFilter(e.target.value)
+  }
 
-    const handleSearchChange = (e :React.ChangeEvent<HTMLInputElement>) => {
-      setFilter(e.target.value)
-    }
+  const lastPokemon = currentPage * pokemonPerPage
+  const firstPokemon = lastPokemon - pokemonPerPage
+  const currentPokemons = pokemonAll.slice(firstPokemon,lastPokemon)
 
-    const lastPokemon = currentPage * pokemonPerPage
-    const firstPokemon = lastPokemon - pokemonPerPage
-    const currentPokemons = pokemonAll.slice(firstPokemon,lastPokemon)
+  const paginate = (pageNumber:number) => {
+    setCurrentPage(pageNumber)
+  }
 
-    const paginate = (pageNumber:number) => {
-      setCurrentPage(pageNumber)
-    }
-
-    
+  
     return (
             <div className="container mx-auto">      
               <div className="row justify-content-center">
@@ -57,24 +56,24 @@ export const PokemonContainer = () => {
                 </MDBRow>
               </div>
               <div className="row justify-content-center">
-              <div className="row">
-               {!filter && 
-               <ReactPaginate pageCount={Math.ceil(totalPok/pokemonPerPage)} pageRangeDisplayed={2} marginPagesDisplayed={1} onPageChange={(data) => paginate(data.selected + 1)} containerClassName="pagination"
-                pageClassName="page-item" pageLinkClassName="page-link" previousClassName="page-link" nextClassName="page-link" activeClassName="active" /> }
-              </div>
-              <div className="row justify-content-center">
-                <div className="col">
-                        {filter ? (
-                         pokemonAll.map(
-                                        (pokemon: {name:string,url:string}) =>
-                                         pokemon.name.includes(filter) &&
-                                       < PokemonCard  key={pokemon.name} url={pokemon.url} name={pokemon.name} />
-                                       ))
-                                       : (
-                                        loading ? "Loading..." : currentPokemons.map((pokemon:{name:string,url:string}) =>  <PokemonCard  key={pokemon.name} url={pokemon.url} name={pokemon.name} /> )
-                          )}
+                <div className="row"> 
+                <ReactPaginate pageCount={Math.ceil(totalPok/pokemonPerPage)} pageRangeDisplayed={2} marginPagesDisplayed={1} onPageChange={(data) => paginate(data.selected + 1)} containerClassName="pagination"
+                  pageClassName="page-item" pageLinkClassName="page-link" previousClassName="page-link" nextClassName="page-link" activeClassName="active" /> 
                 </div>
-              </div>
+                </div>
+                <div className="row justify-content-center">
+                    <div className="col">
+                            {filter ? (
+                            pokemonAll.map(
+                                           (pokemon: {name:string,url:string}) =>
+                                            pokemon.name.includes(filter) &&
+                                          < PokemonCard  key={pokemon.name} url={pokemon.url} name={pokemon.name} />
+                                          ))
+                                          : (
+                                            loading ? "Loading..." : currentPokemons.map((pokemon:{name:string,url:string}) =>  <PokemonCard  key={pokemon.name} url={pokemon.url} name={pokemon.name} /> )
+                              )}
+                  
+                </div>
               </div> 
             </div>
         )    

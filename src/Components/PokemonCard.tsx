@@ -18,20 +18,18 @@ export const PokemonCard: React.FC<{name:string,url:string}> = (props) => {
                 } 
                 else if (res.data.sprites.other["official-artwork"].front_default) {
                  setImage(res.data.sprites.other["official-artwork"].front_default)
-                   }
-                    else {
-                    setImage(res.data.sprites.front_default)
-    
-                 }
+                }
+                else {
+                 setImage(res.data.sprites.front_default)
+                }
             }
-          }
-     
+          } 
         fetchPokemon()
-       }, [])
+    },[])
      
      
     return   (
-              <Link target="_blank" to={ `pokemon/${indexURL}`} >
+              <Link target="_blank" to={ `/pokemon/${indexURL}`} >
                 <div className="card border-primary" style={{display:'inline-block', margin:10}}>
                   <div className="card-header card-title"> 
                   {props.name.toLowerCase().split(" ").map(character => character.charAt(0).toUpperCase() + character.substring(1))}
