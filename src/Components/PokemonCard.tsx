@@ -38,7 +38,7 @@ export const PokemonCard: React.FC<{name:string,url:string}> = (props) => {
                  </div>
                   <img  width="150px" height="150px" alt="No image available" src={imageSource} /> 
                   <div className="card-footer">
-                    <Link  target="_blank" to={ `pokemon/${indexURL}`} className="btn btn-danger">Details</Link>
+                    <Link  target="_blank" to={ `/pokemon/${indexURL}`} className="btn btn-danger">Details</Link>
                  </div>
                </div>
               </Link>

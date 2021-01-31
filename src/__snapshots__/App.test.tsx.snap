@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders the component 1`] = `
+<BrowserRouter>
+  <div
+    className="App"
+  >
+    <Switch>
+      <Route
+        component={[Function]}
+        exact={true}
+        path="/"
+      />
+      <Route
+        component={[Function]}
+        exact={true}
+        path="/pokemon/:pokemonIndex"
+      />
+      <PokemonContainer />
+    </Switch>
+  </div>
+</BrowserRouter>
+`;
+
+exports[`should render all dropdown list with moves 1`] = `
+<DropdownButton
+  alignRight={true}
+  title="Moves"
+  variant="danger"
+>
+  <DropdownItemText
+    key="attack"
+  >
+    attack
+  </DropdownItemText>
+  <DropdownItemText
+    key="defense"
+  >
+    defense
+  </DropdownItemText>
+  <DropdownItemText
+    key="fly"
+  >
+    fly
+  </DropdownItemText>
+</DropdownButton>
+`;
