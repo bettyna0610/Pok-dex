@@ -208,18 +208,18 @@ render() {
           </div>
       <hr></hr>
       <div className="row mt-1">
-        <div className="col-4 align-items-center">
+        <div className="col-lg-4 col-sm-4 align-items-center col-xs">
           <img width="200px" height="200px" className="img-fluid" src={image}/>
         </div>
-        <div className="col-4">
-          <div className="row justify-content-center">
+        <div className="col-lg-4 col-sm-4 col-xs">
+          <div className="row justify-content-center col-xs">
             <h5>Types:</h5>
           </div> 
           <div className="row justify-content-center">
             {type.map((ability:string) => <div className="btn btn-danger m-2">{ability}</div>)}
           </div>
         </div>
-        <div className="col-4 align-items-left">
+        <div className="col-lg-4 col-sm-4 align-items-left col-xs">
           <div className="row justify-content-center">
             <h5>Abilities:</h5> 
           </div>  
@@ -235,8 +235,8 @@ render() {
       </div>
      <div>
     <div className="row justify-content-center">
-      <div className="col-3"></div>
-      <div className="col-6">
+      <div className="col-lg-3 col-sm-3"></div>
+      <div className="col-lg-6 col-sm-6 col-xs">
         <div>
            <h5> Stats:</h5>
         </div>
@@ -248,7 +248,7 @@ render() {
           specialDefensePercent={specialDefensePercent} 
           speedPercent={speedPercent} />
       </div>
-      <div className="col-3"></div>
+      <div className="col-lg-3 col-sm-3"></div>
    </div>
   
     <div className="row justify-content-center m-3"> 
