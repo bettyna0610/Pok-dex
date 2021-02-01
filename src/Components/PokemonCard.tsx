@@ -33,7 +33,7 @@ export const PokemonCard: React.FC<{name:string,url:string}> = (props) => {
                 <div className="card border-primary" style={{display:'inline-block', margin:10}}>
                   <div className="card-header card-title"> 
                   {props.name.toLowerCase().split(" ").map(character => character.charAt(0).toUpperCase() + character.substring(1))}
-                 </div>
+                  </div>
                   <img  width="150px" height="150px" src={imageSource} /> 
                   <div className="card-footer">
                     <Link  target="_blank" to={ `/pokemon/${indexURL}`} className="btn btn-danger">Details</Link>

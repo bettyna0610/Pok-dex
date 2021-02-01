@@ -1,31 +1,23 @@
 
 import React from 'react'
 import {DropdownList} from './Dropdown'
-import {PokemonCard } from '../PokemonCard';
 import {Link} from 'react-router-dom'
 import {Stats} from './Stats'
+import {Evolution} from './Evolution'
 
 type MyProps = {
     match:any
 }
 
 type MyState = {
- abilities: string[]
- evolution : {name:string,url:string} [],
+ abilities: string[],
  image:string,
  name:string,
  type: string [],
  orderNumber:number,
- stats: {
-   hp:number,
-   attack:number,
-   defense:number,
-   specialAttack:number,
-   specialDefense:number,
-   speed:number
- },
  moves: string [],
- loading: boolean
+ loading: boolean,
+ dataPokemon: any
 }
 
 
@@ -37,26 +29,24 @@ export class Pokemon extends React.Component<MyProps, MyState> {
         abilities: [],
         type:[],
         orderNumber:0,
-        stats: {
-            hp:0,
-            attack:0,
-            defense:0,
-            specialAttack:0,
-            specialDefense:0,
-            speed:0
-        },
-        evolution : [{name:'', url:''}],
         moves: [],
-        loading:false
+        loading:false,
+        dataPokemon: []
     }
 
     async componentDidMount() {
 
         let pokemonIndex  = this.props.match.url.split('/')[this.props.match.url.split('/').length-1]
         let image;
-        this.state.loading = true
+        this.setState({
+          loading: true
+        })
         const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonIndex}`)
         const data =  await response.json();
+
+        this.setState({
+          dataPokemon: data
+        })
 
             if(data.sprites.other.dream_world.front_default) {
              image = data.sprites.other.dream_world.front_default
@@ -67,86 +57,12 @@ export class Pokemon extends React.Component<MyProps, MyState> {
             }
     
             
-        let abilities :string[] = data.abilities.map((ability:any) => ability.ability.name)
-        let name = data.name
-        let type = data.types.map((pokType:any) => pokType.type.name)
-        let orderNumber = data.order
-        let hp = 0; let attack =0; let defense=0; let specialAttack=0; let specialDefense=0; let speed=0;
-        let moves = data.moves.map((move:any) => move.move.name)
-        let evolutionArray : {name:string,url:string} [] = []
-
-        data.stats.map(
-            (stat:any)  => {
-                switch(stat.stat.name) {
-                    case 'hp':
-                        hp = stat['base_stat']
-                        break;
-                  case 'attack':
-                      attack = stat['base_stat']
-                      break;
-                      case 'defense':
-                          defense = stat['base_stat']
-                          break;
-                          case 'special-attack':
-                              specialAttack = stat['base_stat']
-                              break;
-                              case 'special-defense':
-                                  specialDefense = stat['base_stat']
-                                  break;
-                                  case 'speed':
-                                      speed = stat['base_stat']
-                              break;
-                }                     
-                })
-
-                const dataSpecies =  await fetch(data.species.url)
-                const dataEvolutionJSON =  await dataSpecies.json();
-               
-                const dataEvolution = await fetch(dataEvolutionJSON.evolution_chain.url)
-                const dataEvoChain = await dataEvolution.json()
-                let evo1; let evo2; let evo3; 
-                    
-                  let evo1_name = dataEvoChain.chain.species.name;
-                  const evo1DataFetch = await fetch(`https://pokeapi.co/api/v2/pokemon/${evo1_name}`)
-                  const evo1Data = await evo1DataFetch.json()
-                        
-                  let evo1_url = `https://pokeapi.co/api/v2/pokemon/${evo1Data.id}`
-                  evo1 ={name:evo1_name, url: evo1_url}
-                  evolutionArray.push(evo1)
-                   
-                  this.setState({
-                    evolution:evolutionArray
-                  })
-                        
-                    if (dataEvoChain.chain.evolves_to.length > 0) {
-                      if(dataEvoChain.chain.evolves_to[0].species.name.length > 0) {
-                        let evo2_url;
-                        let evo2_name = dataEvoChain.chain.evolves_to[0].species.name;
-                        const evo2DataFetch = await fetch(`https://pokeapi.co/api/v2/pokemon/${evo2_name}`)
-                        const evo2Data = await evo2DataFetch.json()
-                        evo2_url = `https://pokeapi.co/api/v2/pokemon/${evo2Data.id}`
-                        evo2 ={name:evo2_name, url: evo2_url}
-                        evolutionArray.push(evo2)
-                     
-                        if(dataEvoChain.chain.evolves_to[0].evolves_to.length > 0) {
-                      
-                          let evo3_name = dataEvoChain.chain.evolves_to[0].evolves_to[0].species.name
-                          let evo3_url;
-                          const evo3DataFetch = await fetch(`https://pokeapi.co/api/v2/pokemon/${evo3_name}`)
-                          const evo3Data = await evo3DataFetch.json()
-                          evo3_url = `https://pokeapi.co/api/v2/pokemon/${evo3Data.id}`
-                          evo3 ={name:evo3_name, url: evo3_url}
-                          evolutionArray.push(evo3)
-
-                        } else {
-                        evo3 = null
-                        }
-
-                      } else {
-                        evo2 = null
-                      }   
-                    }
-                  
+            let abilities :string[] = data.abilities.map((ability:any) => ability.ability.name)
+            let name = data.name
+            let type = data.types.map((pokType:any) => pokType.type.name)
+            let orderNumber = data.order
+            let moves = data.moves.map((move:any) => move.move.name)
+          
                
                this.setState({
                 image,
@@ -154,34 +70,17 @@ export class Pokemon extends React.Component<MyProps, MyState> {
                 name,
                 type,
                 orderNumber,
-                stats: {
-                    hp,
-                    attack,
-                    defense,
-                    specialAttack,
-                    specialDefense,
-                    speed
-                },
                 moves,
-                loading:false,
-                evolution:evolutionArray                
+                loading:false            
               })   
     }
 
 
 render() {
     
-     let {image,name,abilities,type,orderNumber,stats,moves,evolution} = this.state
-     // counting max stat and ratio of stats comparing to the max one
-     let statMaxArray = [stats.hp,stats.attack,stats.defense,stats.specialAttack,stats.specialDefense,stats.speed]
-     let statMax =  Math.max(...statMaxArray)
-     let hpPercent = (stats.hp / statMax ) *100
-     let attackPercent = (stats.attack / statMax ) *100
-     let defensePercent = (stats.defense / statMax) *100
-     let specialAttackPercent = (stats.specialAttack / statMax )*100
-     let specialDefensePercent = (stats.specialDefense / statMax) *100
-     let speedPercent = (stats.speed / statMax)*100
-
+     let {image,name,abilities,type,orderNumber,moves} = this.state
+     
+     
     return (
 
     <div className="container">
@@ -234,13 +133,8 @@ render() {
         <div>
            <h5> Stats:</h5>
         </div>
-          <Stats stats={stats} 
-          hpPercent={hpPercent} 
-          attackPercent={attackPercent} 
-          defensePercent={defensePercent} 
-          specialAttackPercent={specialAttackPercent} 
-          specialDefensePercent={specialDefensePercent} 
-          speedPercent={speedPercent} />
+          <Stats  data={this.state.dataPokemon}
+           />
       </div>
       <div className="col-lg-3 col-sm-3"></div>
    </div>
@@ -249,7 +143,8 @@ render() {
       <h5> Evolution:</h5> 
     </div>
     <div className="row justify-content-center m-3">
-      { evolution &&  evolution.map ( (evo:{name:string, url:string}) => <PokemonCard key={evo.name} name={evo.name} url={`${evo.url}/`}/>  ) } 
+      <Evolution data={this.state.dataPokemon}/>
+      
     </div> 
    </div>
   </div>

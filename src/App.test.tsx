@@ -1,8 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import App from './App';
-import ReactDOM from 'react-dom';
-import {PokemonContainer} from './Components/Container';
 import {Pokemon} from './Components/PokemonPage/Pokemon';
 import { shallow } from 'enzyme';
 import toJSON from 'enzyme-to-json'
@@ -39,6 +37,6 @@ test('pokemon page navigates back to homepage', () => {
 
   const leftClick = { button: 0 }
   userEvent.click(screen.getByText(/Back to Pokédex/i), leftClick)
-  expect(screen.getByText(/Type/i)).toBeInTheDocument()
+  expect(screen.getByText(/Search/i)).toBeInTheDocument()
 
 })

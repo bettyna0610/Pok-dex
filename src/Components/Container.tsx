@@ -23,8 +23,7 @@ export const PokemonContainer = () => {
      setAllPokemon(res.data.results)
      setTotalPok(res.data.count)
      setLoading(false)
-  }
-
+   }
    fetchPokemon()
   }, []) 
    
@@ -40,7 +39,6 @@ export const PokemonContainer = () => {
     setCurrentPage(pageNumber)
   }
 
-  
     return (
             <div className="container mx-auto">      
               <div className="row justify-content-center">
@@ -51,16 +49,16 @@ export const PokemonContainer = () => {
                         <MDBIcon className="text-white" icon="search" />
                       </span>
                     </div>
-                    <input className="form-control my-0 py-1" type="text" placeholder="Type pokemon..." aria-label="Search" onChange={handleSearchChange} />
+                    <input className="form-control my-0 py-1" type="text" placeholder="Search pokemon..." aria-label="Search" onChange={handleSearchChange} />
                   </div>
                 </MDBRow>
               </div>
               <div className="row justify-content-center">
                 <div className="row"> 
-                <ReactPaginate pageCount={Math.ceil(totalPok/pokemonPerPage)} pageRangeDisplayed={2} marginPagesDisplayed={1} onPageChange={(data) => paginate(data.selected + 1)} containerClassName="pagination"
+                  <ReactPaginate pageCount={Math.ceil(totalPok/pokemonPerPage)} pageRangeDisplayed={2} marginPagesDisplayed={1} onPageChange={(data) => paginate(data.selected + 1)} containerClassName="pagination"
                   pageClassName="page-item" pageLinkClassName="page-link" previousClassName="page-link" nextClassName="page-link" activeClassName="active" /> 
                 </div>
-                </div>
+              </div>
                 <div className="row justify-content-center">
                     <div className="col">
                             {filter ? (

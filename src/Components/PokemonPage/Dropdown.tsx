@@ -3,7 +3,6 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown'
 
 
-
 export const DropdownList : React.FC <{moves:string[]}> = (props) => {
    return (
    <DropdownButton
